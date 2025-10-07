@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grocerease/auth/auth_service.dart';
+import 'package:grocerease/screens/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Signup extends StatefulWidget {
@@ -19,43 +20,43 @@ class _SignupState extends State<Signup> {
   final _confirmPasswordController = TextEditingController();
   // final _supabase = Supabase.instance.client;
 
-  void _signup() async {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    final confirmPassword = _confirmPasswordController.text;
+  // void _signup() async {
+  //   final email = _emailController.text;
+  //   final password = _passwordController.text;
+  //   final confirmPassword = _confirmPasswordController.text;
     
-    if(password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Passwords don't match")));
-      return;
-    }
+  //   if(password != confirmPassword) {
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Passwords don't match")));
+  //     return;
+  //   }
 
-    try{  
-      await authService.signUpWithEmailPassword(email, password);
-    } catch (e){
-      if(mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
-      }
-    }
-  }
-
-  // Future<void> _signup() async {
-  //   final email = _emailController.text.trim();
-  //   final password = _passwordController.text.trim();
-
-  //   try {
-  //     final response = await _supabase.auth.signUp(email: email, password: password);
-  //     if (response.user != null) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Signup successful!')),
-  //       );
-  //       Navigator.pushNamedAndRemoveUntil(context, '/', (Route<dynamic> route) => false);
+  //   try{  
+  //     await authService.signUpWithEmailPassword(email, password);
+  //   } catch (e){
+  //     if(mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
   //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Error: ${e.toString()}')),
-  //     );
   //   }
   // }
+
+  Future<void> _signup() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    try {
+      final response = await authService.signUpWithEmailPassword(email, password);
+      if (response.user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Signup successful!')),
+        );
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +77,10 @@ class _SignupState extends State<Signup> {
               alignment: Alignment.center,
               padding: EdgeInsets.all(20.0),
               margin: EdgeInsetsDirectional.fromSTEB(35, 80, 35, 0),
-              decoration: BoxDecoration(
-                color: Color(0x54FFFFFF),
-                borderRadius: BorderRadius.circular(45.0),
-              ),
+              // decoration: BoxDecoration(
+              //   color: Color(0x54FFFFFF),
+              //   borderRadius: BorderRadius.circular(45.0),
+              // ),
               child: Column(
                 children: [
                   Container(
@@ -129,7 +130,7 @@ class _SignupState extends State<Signup> {
                   //   ),
                   // ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 8.0),
                     child: SizedBox(
                       child: TextField(
                         obscureText: false,
@@ -153,7 +154,7 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 8.0),
                     child: SizedBox(
                       child: TextField(
                         obscureText: true,
@@ -177,7 +178,7 @@ class _SignupState extends State<Signup> {
                     )
                   ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 8.0),
                     child: SizedBox(
                       child: TextField(
                         obscureText: true,
@@ -207,12 +208,11 @@ class _SignupState extends State<Signup> {
                     child: SizedBox(
                       child: FilledButton(
                         onPressed: _signup,//() => Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false),
-                        style: ButtonStyle(
-                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            )
-                          )
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          backgroundColor: Color(0xFFFA8801)
                         ),
                         child: Text(
                           'Sign Up',

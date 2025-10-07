@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grocerease/auth/auth_service.dart';
 import 'package:grocerease/main.dart';
+import 'package:grocerease/screens/home.dart';
+import 'package:grocerease/screens/signup.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,18 +17,18 @@ class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  void _login() async {
-    final email = _emailController.text;
-    final password = _passwordController.text;
+  // void _login() async {
+  //   final email = _emailController.text;
+  //   final password = _passwordController.text;
 
-    try {
-      await authService.signInWithEmailPassword(email, password);
-    } catch(e) {
-      if(mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
-      }
-    }
-  }
+  //   try {
+  //     await authService.signInWithEmailPassword(email, password);
+  //   } catch(e) {
+  //     if(mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+  //     }
+  //   }
+  // }
 
   // Future<AuthResponse> _googleSignIn() async {
   //   /// TODO: update the Web client ID with your own.
@@ -65,24 +67,23 @@ class _LoginState extends State<Login> {
   //   );
   // }
 
-  // Future<void> _login() async {
-  //   try {
-  //     final response = await _supabase.auth.signInWithPassword(
-  //       email: _emailController.text,
-  //       password: _passwordController.text,
-  //     );
-  //     if (response.user != null) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Login successful!')),
-  //       );
-  //       Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Login failed: $e')),
-  //     );
-  //   }
-  // }
+  Future<void> _login() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    try {
+      final response = await authService.signInWithEmailPassword(email, password);
+      if (response.user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login successful!')),
+        );
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,10 +103,10 @@ class _LoginState extends State<Login> {
               alignment: Alignment.center,
               padding: EdgeInsets.all(20.0),
               margin: EdgeInsetsDirectional.fromSTEB(35, 80, 35, 0),
-              decoration: BoxDecoration(
-                color: Color(0x54FFFFFF),
-                borderRadius: BorderRadius.circular(45.0),
-              ),
+              // decoration: BoxDecoration(
+              //   color: Color(0x54FFFFFF),
+              //   borderRadius: BorderRadius.circular(45.0),
+              // ),
               child: Column(
                 children: [
                   Container(
@@ -132,7 +133,7 @@ class _LoginState extends State<Login> {
                   ),
       
                   Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 8.0),
                     child: SizedBox(
                       child: TextField(
                         obscureText: false,
@@ -156,7 +157,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                    margin: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 8.0),
                     child: SizedBox(
                       child: TextField(
                         obscureText: true,
@@ -199,12 +200,11 @@ class _LoginState extends State<Login> {
                     child: SizedBox(
                       child: FilledButton(
                         onPressed: _login ,//() => Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false),
-                        style: ButtonStyle(
-                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            )
-                          )
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          backgroundColor: Color(0xFFFA8801)
                         ),
                         child: Text(
                           'Sign In',
@@ -270,7 +270,11 @@ class _LoginState extends State<Login> {
                     child: Text("Don't have an account?")
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, '/signup'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const Signup(),
+                      )
+                    ),
                     child: SizedBox(
                       child: Text(
                         'Sign Up',
