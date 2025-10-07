@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: NotificationScreen(),
-  ));
-}
-
 class NotificationScreen extends StatelessWidget {
+  NotificationScreen({super.key});
+
   final List<Map<String, String>> newNotifications = [
     {"title": "Mother", "message": "Added a new Item in your Grocery List."},
     {"title": "Mother", "message": "Added a new Item in your Grocery List."},
@@ -36,7 +31,6 @@ class NotificationScreen extends StatelessWidget {
         fontSize: 22,
       ),
     ),
-        leading: Icon(Icons.arrow_back, color: Colors.black),
         actions: [
           Icon(Icons.more_horiz, color: Colors.black),
           SizedBox(width: 10, height: 24),
@@ -62,14 +56,14 @@ class NotificationScreen extends StatelessWidget {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.groups), label: "Community"),
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/barcode_scanner.png', 
-                width: 35,
-                height: 35,
-              ),
-              label: "",
-            ),
+          // BottomNavigationBarItem(
+          //     icon: Image.asset(
+          //       'assets/barcode_scanner.png', 
+          //       width: 35,
+          //       height: 35,
+          //     ),
+          //     label: "",
+          //   ),
           BottomNavigationBarItem(
               icon: Icon(Icons.storefront), label: "Marketplace"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
