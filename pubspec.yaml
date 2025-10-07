@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_dotenv: ^6.0.0
+  google_sign_in: ^7.2.0
   supabase_flutter: ^2.10.1
 
 dev_dependencies:
@@ -20,3 +22,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - .env
