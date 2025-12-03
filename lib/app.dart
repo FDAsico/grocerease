@@ -32,14 +32,15 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, 
+      debugShowCheckedModeBanner: false,
       title: 'GrocerEase',
-      home: activeSession == null ? Login() : HomePage(),
+      // FIXED: always start at Login page for testing
+      home: Login(),
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Color(0xFF4F8E81),
-          primary: Color(0xFF4F8E81),
+          seedColor: const Color(0xFF4F8E81),
+          primary: const Color(0xFF4F8E81),
           //surface: Color(0xFFE4D7FD),
           //onPrimary: Color(0xFFFA8801),
           //secondary: Color(0xFFFA8801),
@@ -88,3 +89,4 @@ class _AppState extends State<App> {
     );
   }
 }
+

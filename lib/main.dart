@@ -12,13 +12,13 @@ Future<void> main() async {
   await dotenv.load(fileName: '.env');
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!
+      url: dotenv.env['SUPABASE_URL']!,
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!
   );
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // SharedPreferences prefs = await SharedPreferences.getInstance();
   // initScreen = prefs.getInt('initScreen');
   // //await prefs.setInt("initScreen", 1);
   // debugPrint('initScreen $initScreen');
-  runApp(App());
+  runApp(const App());
 }
