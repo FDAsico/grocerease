@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     final groupData = await Supabase.instance.client
         .from('group_lists')
         .select('invite_code')
-        .eq('user_id', user.id);
+        .eq('owner_id', user.id);
 
     setState(() {
       _groupLists.clear();
