@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'profile.dart';
 import 'home.dart';
 import 'list.dart';
+import 'ListsOnlyPage.dart';
 
 class AddItemDialog extends StatefulWidget {
   final Function(String name, String category, String quantity) onAdd;
@@ -458,7 +459,7 @@ class _ListPageState extends State<ListPage> {
               context, MaterialPageRoute(builder: (_) => HomePage()));
         }else if (index == 1) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => ListPage()));
+              context, MaterialPageRoute(builder: (_) => ListsOnlyPage()));
         }else if (index == 3) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (_) => ProfilePage()));
