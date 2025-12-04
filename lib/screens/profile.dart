@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'home.dart';
 import '../user.dart' as MyUser;
 import 'list.dart';
+import 'ListsOnlyPage.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -426,7 +427,7 @@ class BottomNavBar extends StatelessWidget {
         if (label == "List") {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const ListPage()),
+            MaterialPageRoute(builder: (_) => const ListsOnlyPage()),
           );
         }
         if (label == "Favorites") {
