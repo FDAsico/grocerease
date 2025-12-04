@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'list.dart';
 import 'profile.dart';
+import 'ListsOnlyPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -399,7 +400,7 @@ class _HomePageState extends State<HomePage> {
         } else if (label == 'List') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const ListPage()),
+            MaterialPageRoute(builder: (context) => const ListsOnlyPage()),
           );
         } else if (label == 'Favorites') {
           // No Favorites page yet
