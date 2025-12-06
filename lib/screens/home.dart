@@ -12,6 +12,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<Map<String, dynamic>> _personalLists = [];
+  final List<Map<String, dynamic>> _groupLists = [];
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -32,37 +35,29 @@ class _HomePageState extends State<HomePage> {
       _personalLists.clear();
       for (var item in data) {
         _personalLists.add({
+          'id': item['id'],
           'title': item['name'],
           'private': item['is_private'],
           'progress': 0.0,
         });
       }
     });
+
     final groupData = await Supabase.instance.client
         .from('group_lists')
         .select('invite_code')
-        .eq('owner_id', user.id);
+        .eq('user_id', user.id);
 
     setState(() {
       _groupLists.clear();
       for (var item in groupData) {
         _groupLists.add({
+          'id': item['invite_code'],
           'title': 'Group List (${item['invite_code']})',
           'joinedCode': item['invite_code'],
           'progress': 0.0,
         });
       }
-    });
-  }
-
-  int _selectedIndex = 0; // for indicator
-
-  final List<Map<String, dynamic>> _personalLists = [];
-  final List<Map<String, dynamic>> _groupLists = [];
-
-  void _onNavTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
     });
   }
 
@@ -75,9 +70,7 @@ class _HomePageState extends State<HomePage> {
       barrierColor: Colors.black.withOpacity(0.2),
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           backgroundColor: const Color(0xFFD1FBF2),
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -128,8 +121,7 @@ class _HomePageState extends State<HomePage> {
                           labelStyle: TextStyle(
                             color: isPrivate ? Colors.white : Colors.black,
                           ),
-                          onSelected: (v) =>
-                              setStateDialog(() => isPrivate = true),
+                          onSelected: (v) => setStateDialog(() => isPrivate = true),
                         ),
                         const SizedBox(width: 8),
                         ChoiceChip(
@@ -139,8 +131,7 @@ class _HomePageState extends State<HomePage> {
                           labelStyle: TextStyle(
                             color: !isPrivate ? Colors.white : Colors.black,
                           ),
-                          onSelected: (v) =>
-                              setStateDialog(() => isPrivate = false),
+                          onSelected: (v) => setStateDialog(() => isPrivate = false),
                         ),
                       ],
                     ),
@@ -161,13 +152,9 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(width: 8),
                         FilledButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFF139A5A),
-                            ),
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF139A5A)),
                             shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                             ),
                           ),
                           onPressed: () async {
@@ -182,16 +169,15 @@ class _HomePageState extends State<HomePage> {
                             final user = Supabase.instance.client.auth.currentUser;
                             if (user == null) return;
 
-                            // Save to Supabase
                             await Supabase.instance.client.from('grocery_lists').insert({
                               'user_id': user.id,
                               'name': name,
                               'is_private': isPrivate,
                             });
 
-                            // Update local list
                             setState(() {
                               _personalLists.add({
+                                'id': DateTime.now().toString(),
                                 'title': name,
                                 'private': isPrivate,
                                 'progress': 0.0,
@@ -200,7 +186,6 @@ class _HomePageState extends State<HomePage> {
 
                             Navigator.pop(context);
                           },
-
                           child: const Text('Create'),
                         ),
                       ],
@@ -223,9 +208,7 @@ class _HomePageState extends State<HomePage> {
       barrierColor: Colors.black.withOpacity(0.2),
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           backgroundColor: const Color(0xFFD1FBF2),
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -278,12 +261,9 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(width: 8),
                     FilledButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            const Color(0xFF139A5A)),
+                        backgroundColor: MaterialStateProperty.all(const Color(0xFF139A5A)),
                         shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                         ),
                       ),
                       onPressed: () {
@@ -296,6 +276,7 @@ class _HomePageState extends State<HomePage> {
                         }
                         setState(() {
                           _groupLists.add({
+                            'id': code,
                             'title': 'Group List ($code)',
                             'joinedCode': code,
                             'progress': 0.0,
@@ -323,20 +304,12 @@ class _HomePageState extends State<HomePage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(0, 4),
-          ),
+          BoxShadow(color: Color(0x3F000000), blurRadius: 4, offset: Offset(0, 4)),
         ],
       ),
       child: Stack(
         children: [
-          Positioned(
-            left: 12,
-            top: 12,
-            child: Icon(icon, size: 30, color: const Color(0xFF139A5A)),
-          ),
+          Positioned(left: 12, top: 12, child: Icon(icon, size: 30, color: const Color(0xFF139A5A))),
           Positioned(
             left: 12,
             bottom: 12,
@@ -391,31 +364,27 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () {
         setState(() => _selectedIndex = index);
-
         if (label == 'Home') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
         } else if (label == 'List') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const ListsOnlyPage()),
+            MaterialPageRoute(
+              builder: (_) => ListsOnlyPage(
+                personalLists: _personalLists,
+                groupLists: _groupLists,
+              ),
+            ),
           );
-        } else if (label == 'Favorites') {
-          // No Favorites page yet
-        } else if (label == 'Profile') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const ProfilePage()),
-          );
+        }
+        else if (label == 'Profile') {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
         }
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon,
-              color: isActive ? const Color(0xFF139A5A) : Colors.grey[600]),
+          Icon(icon, color: isActive ? const Color(0xFF139A5A) : Colors.grey[600]),
           Text(
             label,
             style: TextStyle(
@@ -429,7 +398,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -440,8 +408,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20),
                 child: Row(
                   children: const [
                     Text(
@@ -518,8 +485,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 8),
                             Column(
-                              children: _personalLists
-                                  .map(
+                              children: _personalLists.map(
                                     (l) => Padding(
                                   padding: const EdgeInsets.only(bottom: 10.0),
                                   child: GestureDetector(
@@ -527,7 +493,10 @@ class _HomePageState extends State<HomePage> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ListPage(),
+                                          builder: (_) => ListPage(
+                                            listId: l['id'].toString(),
+                                            listTitle: l['title'] as String,
+                                          ),
                                         ),
                                       );
                                     },
@@ -537,8 +506,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                              )
-                                  .toList(),
+                              ).toList(),
                             ),
                           ],
                         ),
@@ -558,17 +526,18 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 8),
                             Column(
-                              children: _groupLists
-                                  .map(
+                              children: _groupLists.map(
                                     (g) => Padding(
-                                  padding:
-                                  const EdgeInsets.only(bottom: 10.0),
+                                  padding: const EdgeInsets.only(bottom: 10.0),
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ListPage(),
+                                          builder: (_) => ListPage(
+                                            listId: g['id'].toString(),
+                                            listTitle: g['title'] as String,
+                                          ),
                                         ),
                                       );
                                     },
@@ -578,8 +547,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                              )
-                                  .toList(),
+                              ).toList(),
                             ),
                           ],
                         ),
@@ -600,11 +568,7 @@ class _HomePageState extends State<HomePage> {
             decoration: const BoxDecoration(
               color: Colors.white,
               boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 6,
-                  offset: Offset(0, -2),
-                ),
+                BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, -2)),
               ],
             ),
             child: Row(
@@ -621,9 +585,7 @@ class _HomePageState extends State<HomePage> {
           Positioned(
             bottom: 30,
             child: GestureDetector(
-              onTap: () {
-                // TODO: open barcode scanner here
-              },
+              onTap: () {},
               child: Container(
                 height: 70,
                 width: 70,
