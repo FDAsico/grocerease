@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'list.dart';
 import 'home.dart';
 import 'profile.dart';
 
 class ListsOnlyPage extends StatefulWidget {
-  const ListsOnlyPage({super.key});
+  final List<Map<String, dynamic>> personalLists;
+  final List<Map<String, dynamic>> groupLists;
+
+  const ListsOnlyPage({
+    super.key,
+    this.personalLists = const [],
+    this.groupLists = const [],
+  });
 
   @override
   State<ListsOnlyPage> createState() => _ListsOnlyPageState();
 }
 
 class _ListsOnlyPageState extends State<ListsOnlyPage> {
-  final List<Map<String, dynamic>> _personalLists = [];
-  final List<Map<String, dynamic>> _groupLists = [];
-  int _selectedIndex = 1; // List tab is selected
+  late List<Map<String, dynamic>> _personalLists;
+  late List<Map<String, dynamic>> _groupLists;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
+    _personalLists = widget.personalLists;
+    _groupLists = widget.groupLists;
     loadLists();
   }
 
@@ -34,12 +45,13 @@ class _ListsOnlyPageState extends State<ListsOnlyPage> {
     final groupData = await Supabase.instance.client
         .from('group_lists')
         .select('invite_code')
-        .eq('owner_id', user.id);
+        .eq('user_id', user.id);
 
     setState(() {
       _personalLists.clear();
       for (var item in personalData) {
         _personalLists.add({
+          'id': item['id'],
           'title': item['name'],
           'private': item['is_private'],
           'progress': 0.0,
@@ -49,6 +61,7 @@ class _ListsOnlyPageState extends State<ListsOnlyPage> {
       _groupLists.clear();
       for (var item in groupData) {
         _groupLists.add({
+          'id': item['invite_code'],
           'title': 'Group List (${item['invite_code']})',
           'joinedCode': item['invite_code'],
           'progress': 0.0,
@@ -102,10 +115,13 @@ class _ListsOnlyPageState extends State<ListsOnlyPage> {
         } else if (label == 'List') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const ListsOnlyPage()),
+            MaterialPageRoute(
+              builder: (context) => ListsOnlyPage(
+                personalLists: _personalLists,
+                groupLists: _groupLists,
+              ),
+            ),
           );
-        } else if (label == 'Favorites') {
-          // No Favorites page yet
         } else if (label == 'Profile') {
           Navigator.pushReplacement(
             context,
@@ -190,7 +206,10 @@ class _ListsOnlyPageState extends State<ListsOnlyPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const ListPage(),
+                                  builder: (context) => ListPage(
+                                    listId: l['id'].toString(),
+                                    listTitle: l['title'],
+                                  ),
                                 ),
                               );
                             },
@@ -230,7 +249,10 @@ class _ListsOnlyPageState extends State<ListsOnlyPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const ListPage(),
+                                  builder: (context) => ListPage(
+                                    listId: g['id'].toString(),
+                                    listTitle: g['title'],
+                                  ),
                                 ),
                               );
                             },
@@ -280,9 +302,7 @@ class _ListsOnlyPageState extends State<ListsOnlyPage> {
           Positioned(
             bottom: 30,
             child: GestureDetector(
-              onTap: () {
-                // TODO: open barcode scanner here
-              },
+              onTap: () {},
               child: Container(
                 height: 70,
                 width: 70,
