@@ -76,7 +76,7 @@ class _LoginState extends State<Login> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login successful!')),
         );
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (Route<dynamic> route) => false);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

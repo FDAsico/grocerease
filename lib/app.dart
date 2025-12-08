@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocerease/main.dart';
-import 'package:grocerease/screens/home.dart';
+import 'package:grocerease/screens/homepage.dart';
 import 'package:grocerease/screens/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -41,7 +41,7 @@ class _AppState extends State<App> {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF4F8E81),
           primary: const Color(0xFF4F8E81),
-          //surface: Color(0xFFE4D7FD),
+          surface: Color(0xFFD1FBF2),
           //onPrimary: Color(0xFFFA8801),
           //secondary: Color(0xFFFA8801),
           //onSecondary: Color(0xFFFA8801),

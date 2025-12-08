@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:grocerease/screens/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'home.dart';
 import '../user.dart' as MyUser;
 import 'list.dart';
 class ProfilePage extends StatefulWidget {
@@ -68,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD1FBF2),
       body: Stack(
         children: [
           Container(color: Colors.white.withOpacity(0.33)),
@@ -76,34 +75,6 @@ class _ProfilePageState extends State<ProfilePage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 50),
-
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Row(
-                    children: const [
-                      Text(
-                        "Grocer",
-                        style: TextStyle(
-                          color: Color(0xFF4E8E81),
-                          fontSize: 25,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      Text(
-                        "Ease",
-                        style: TextStyle(
-                          color: Color(0xFFFA8801),
-                          fontSize: 25,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
                 const SizedBox(height: 40),
 
                 Container(
@@ -240,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (mounted) {
                       Navigator.pushNamedAndRemoveUntil(
                         context,
-                        "/login",
+                        "/",
                             (_) => false,
                       );
                     }
@@ -276,13 +247,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 90),
               ],
             ),
-          ),
-
-          const Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: BottomNavBar(activePage: 'profile'),
           ),
         ],
       ),
@@ -385,72 +349,6 @@ class ProfileOption extends StatelessWidget {
             if (trailing != null) trailing!,
           ],
         ),
-      ),
-    );
-  }
-}
-
-class BottomNavBar extends StatelessWidget {
-  final String activePage;
-
-  const BottomNavBar({super.key, required this.activePage});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _navItem(context, Icons.home, "Home", activePage == "home"),
-          _navItem(context, Icons.groups, "List", activePage == "list"),
-          _navItem(context, Icons.favorite, "Favorites", activePage == "favorites"),
-          _navItem(context, Icons.person, "Profile", activePage == "profile"),
-        ],
-      ),
-    );
-  }
-
-  Widget _navItem(BuildContext context, IconData icon, String label, bool active) {
-    final inactiveColor = Colors.grey[600]; // gray color same as HomePage
-    return GestureDetector(
-      onTap: () {
-        if (label == "Home") {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const HomePage()),
-                (route) => false,
-          );
-        }
-        if (label == "List") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const ListPage()),
-          );
-        }
-        if (label == "Favorites") {
-          Navigator.pushReplacementNamed(context, "/favorites");
-        }
-        // Profile is current page
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: active ? const Color(0xFF4F8E81) : inactiveColor, // <-- use inactiveColor
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontFamily: 'Pathway Extreme',
-              fontWeight: FontWeight.w500,
-              color: active ? const Color(0xFF4F8E81) : inactiveColor, // <-- use inactiveColor
-            ),
-          ),
-        ],
       ),
     );
   }

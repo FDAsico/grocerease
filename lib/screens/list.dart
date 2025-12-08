@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'profile.dart';
-import 'home.dart';
-import 'list.dart';
-
 class AddItemDialog extends StatefulWidget {
   final Function(String name, String category, String quantity) onAdd;
 
@@ -284,27 +280,7 @@ class _ListPageState extends State<ListPage> {
         child: Column(
           children: [
             Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 28.0, vertical: 16),
-              child: Row(
-                children: const [
-                  Text('Grocer',
-                      style: TextStyle(
-                          color: Color(0xFF4E8E81),
-                          fontSize: 25,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: 'Poppins')),
-                  Text('Ease',
-                      style: TextStyle(
-                          color: Color(0xFFFA8801),
-                          fontSize: 25,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: 'Poppins')),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28.0),
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text('Weekly Groceries',
@@ -387,94 +363,6 @@ class _ListPageState extends State<ListPage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          Container(
-            height: 70,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 6,
-                  offset: Offset(0, -2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _navItem(Icons.home, 'Home', 0),
-                _navItem(Icons.groups, 'List', 1),
-                const SizedBox(width: 70),
-                _navItem(Icons.favorite, 'Favorites', 2),
-                _navItem(Icons.person, 'Profile', 3),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF139A5A),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.qr_code_scanner,
-                  color: Colors.white,
-                  size: 34,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _navItem(IconData icon, String label, int index) {
-    final bool active = _selectedIndex == index;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() => _selectedIndex = index);
-
-        if (index == 0) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => HomePage()));
-        }else if (index == 1) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => ListPage()));
-        }else if (index == 3) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => ProfilePage()));
-        } else if (index != 1) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("This page is not available yet")));
-        }
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: active ? Color(0xFF139A5A) : Colors.grey),
-          Text(label,
-              style: TextStyle(
-                  color: active ? Color(0xFF139A5A) : Colors.grey, fontSize: 11))
-        ],
       ),
     );
   }
