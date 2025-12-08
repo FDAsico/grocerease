@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grocerease/screens/bottomnavbar.dart';
 import 'package:grocerease/screens/homepage.dart';
 import 'package:grocerease/screens/list.dart';
+import 'package:grocerease/screens/notification.dart';
 import 'package:grocerease/screens/profile.dart';
 
 class Home extends StatefulWidget {
@@ -57,6 +58,19 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 18.0),
+            child: IconButton(
+              onPressed: () {
+               Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => NotificationScreen(),
+                ));
+              },
+              icon: const Icon(Icons.notifications),
+            ),
+          ),
+        ],
       ),
       body: _pages[currentPageIndex],
       bottomNavigationBar: BottomMenu(
