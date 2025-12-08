@@ -48,27 +48,6 @@ class NotificationScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.teal,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.groups), label: "Community"),
-          // BottomNavigationBarItem(
-          //     icon: Image.asset(
-          //       'assets/barcode_scanner.png', 
-          //       width: 35,
-          //       height: 35,
-          //     ),
-          //     label: "",
-          //   ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.storefront), label: "Marketplace"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
-      ),
     );
   }
 

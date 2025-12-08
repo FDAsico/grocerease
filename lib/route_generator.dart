@@ -13,7 +13,7 @@ class RouteGenerator {
       case '/signup':
         return MaterialPageRoute(builder: (_) => Signup());
       case '/home':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => Home());
       default:
         return _errorRoute();
     }

@@ -49,7 +49,7 @@ class _SignupState extends State<Signup> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Signup successful!')),
         );
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Home()), (Route<dynamic> route) => false);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
