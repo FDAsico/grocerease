@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grocerease/screens/home.dart';
 import 'package:grocerease/screens/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 // import 'package:grocerease/main.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -16,17 +16,17 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   initialization();
-  // }
-  // void initialization() async {
-  //   debugPrint('Pausing...');
-  //   await Future.delayed(const Duration(seconds: 3));
-  //   debugPrint('Unpausing');
-  //   FlutterNativeSplash.remove();
-  // } 
+  @override
+  void initState(){
+    super.initState();
+    initialization();
+  }
+  void initialization() async {
+    debugPrint('Pausing...');
+    await Future.delayed(const Duration(seconds: 3));
+    debugPrint('Unpausing');
+    FlutterNativeSplash.remove();
+  } 
 
   @override
   Widget build(BuildContext context) {
