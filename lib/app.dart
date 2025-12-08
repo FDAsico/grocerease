@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocerease/main.dart';
-import 'package:grocerease/screens/homepage.dart';
+import 'package:grocerease/screens/home.dart';
 import 'package:grocerease/screens/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -34,8 +33,8 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'GrocerEase',
-      // FIXED: always start at Login page for testing
-      home: Login(),
+      // Changed back to activeSession detection
+      home: activeSession == null ? Login() : Home(),
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
