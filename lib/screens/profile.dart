@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:grocerease/screens/home.dart';
+import 'package:grocerease/screens/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../auth/auth_service.dart';
 import '../user.dart' as MyUser;
-import 'list.dart';
+
+final authService = AuthService();
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -62,8 +64,10 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-
-
+  void logout() async {
+    await authService.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,16 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 30),
 
                 GestureDetector(
-                  onTap: () async {
-                    await supabase.auth.signOut();
-                    if (mounted) {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        "/",
-                            (_) => false,
-                      );
-                    }
-                  },
+                  onTap: logout,
                   child: Container(
                     width: 143,
                     height: 36,
