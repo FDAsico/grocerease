@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'profile.dart';
+import 'home.dart';
+import 'ListsOnlyPage.dart';
+
 class AddItemDialog extends StatefulWidget {
   final Function(String name, String category, String quantity) onAdd;
 
@@ -36,7 +40,6 @@ class _AddItemDialogState extends State<AddItemDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Title
             Text(
               "Add Item",
               style: TextStyle(
@@ -47,8 +50,6 @@ class _AddItemDialogState extends State<AddItemDialog> {
               ),
             ),
             SizedBox(height: 20),
-
-            // Item Name
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -67,13 +68,11 @@ class _AddItemDialogState extends State<AddItemDialog> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                  hintText: "e.g., Milk", // example input
+                  hintText: "e.g., Milk",
                   hintStyle: TextStyle(color: Colors.grey[400]),
                 ),
               ),
             ),
-
-            // Category
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -100,8 +99,6 @@ class _AddItemDialogState extends State<AddItemDialog> {
                 },
               ),
             ),
-
-            // Quantity
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -121,13 +118,11 @@ class _AddItemDialogState extends State<AddItemDialog> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                  hintText: "e.g., 2", // example input
+                  hintText: "e.g., 2",
                   hintStyle: TextStyle(color: Colors.grey[400]),
                 ),
               ),
             ),
-
-            // Add button
             GestureDetector(
               onTap: () async {
                 if (nameCtrl.text.trim().isNotEmpty &&
@@ -181,9 +176,11 @@ class _AddItemDialogState extends State<AddItemDialog> {
   }
 }
 
-
 class ListPage extends StatefulWidget {
-  const ListPage({super.key});
+  final String listId;
+  final String listTitle;
+
+  const ListPage({super.key, required this.listId, required this.listTitle});
 
   @override
   State<ListPage> createState() => _ListPageState();
@@ -194,10 +191,12 @@ class _ListPageState extends State<ListPage> {
   int _selectedIndex = 1;
   List<Map<String, dynamic>> items = [];
   String selectedCategoryTab = 'All items';
+  late String currentListId;
 
   @override
   void initState() {
     super.initState();
+    currentListId = widget.listId;
     _loadItems();
   }
 
@@ -208,7 +207,8 @@ class _ListPageState extends State<ListPage> {
     final response = await supabase
         .from('grocery_items')
         .select()
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .eq('list_id', currentListId);
 
     setState(() {
       items = List<Map<String, dynamic>>.from(response);
@@ -227,6 +227,7 @@ class _ListPageState extends State<ListPage> {
       'quantity': quantity,
       'bought': false,
       'user_id': user.id,
+      'list_id': currentListId,
     })
         .select()
         .single();
@@ -263,7 +264,12 @@ class _ListPageState extends State<ListPage> {
     filteredItems.where((i) => i['bought'] ?? false).toList();
 
     return Scaffold(
-      backgroundColor: Color(0xFFD1FBF2),
+      appBar: AppBar(title: Text(widget.listTitle,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Poppins',
+      ),),),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -279,17 +285,6 @@ class _ListPageState extends State<ListPage> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Weekly Groceries',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700)),
-              ),
-            ),
             SizedBox(height: 16),
             SizedBox(
               height: 40,
@@ -302,32 +297,34 @@ class _ListPageState extends State<ListPage> {
                   'Produce',
                   'Snacks',
                   'Beverages'
-                ].map((tab) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() => selectedCategoryTab = tab);
-                    },
+                ]
+                    .map(
+                      (c) => GestureDetector(
+                    onTap: () => setState(() => selectedCategoryTab = c),
                     child: Container(
-                      margin: EdgeInsets.only(right: 12),
+                      margin: EdgeInsets.only(right: 10),
                       padding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: selectedCategoryTab == tab
-                            ? Color(0xFF4F8E81).withOpacity(0.3)
-                            : Color(0x4FA0DDD1),
-                        borderRadius: BorderRadius.circular(15),
+                        color: selectedCategoryTab == c
+                            ? Color(0xFF139A5A)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
                         child: Text(
-                          tab,
+                          c,
                           style: TextStyle(
-                              color: Color(0xFF4F8E81),
-                              fontWeight: FontWeight.w700),
+                              color: selectedCategoryTab == c
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
-                  );
-                }).toList(),
+                  ),
+                )
+                    .toList(),
               ),
             ),
             SizedBox(height: 16),
@@ -335,32 +332,36 @@ class _ListPageState extends State<ListPage> {
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 28),
                 children: [
-                  Text('To Get',
-                      style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                  ...toGetItems.map(
-                        (i) => CheckboxListTile(
-                      title: Text(i['name']),
-                      subtitle: Text('${i['category']} - ${i['quantity']}'),
-                      value: i['bought'],
-                      onChanged: (v) => _updateBought(i, v),
+                  if (toGetItems.isNotEmpty)
+                    ...toGetItems.map(
+                          (i) => Card(
+                        child: ListTile(
+                          title: Text(i['name']),
+                          subtitle: Text(i['category']),
+                          trailing: Checkbox(
+                            value: i['bought'] ?? false,
+                            onChanged: (v) => _updateBought(i, v),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Text('Completed',
-                      style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                  ...completedItems.map(
-                        (i) => CheckboxListTile(
-                      title: Text(i['name']),
-                      subtitle: Text('${i['category']} - ${i['quantity']}'),
-                      value: i['bought'],
-                      onChanged: (v) => _updateBought(i, v),
+                  if (completedItems.isNotEmpty)
+                    ...completedItems.map(
+                          (i) => Card(
+                        color: Color(0xFFD9D9D9),
+                        child: ListTile(
+                          title: Text(i['name']),
+                          subtitle: Text(i['category']),
+                          trailing: Checkbox(
+                            value: i['bought'] ?? false,
+                            onChanged: (v) => _updateBought(i, v),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),

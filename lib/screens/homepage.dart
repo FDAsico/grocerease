@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grocerease/screens/bottomnavbar.dart';
 import 'package:grocerease/screens/list.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -11,7 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  final List<Map<String, dynamic>> _personalLists = [];
+  final List<Map<String, dynamic>> _groupLists = [];
   @override
   void initState() {
     super.initState();
@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
       _personalLists.clear();
       for (var item in data) {
         _personalLists.add({
+          'id': item['id'],
           'title': item['name'],
           'private': item['is_private'],
           'progress': 0.0,
@@ -46,6 +47,7 @@ class _HomePageState extends State<HomePage> {
       _groupLists.clear();
       for (var item in groupData) {
         _groupLists.add({
+          'id': item['invite_code'],
           'title': 'Group List (${item['invite_code']})',
           'joinedCode': item['invite_code'],
           'progress': 0.0,
@@ -55,9 +57,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   int currentPageIndex = 0; // for indicator
-
-  final List<Map<String, dynamic>> _personalLists = [];
-  final List<Map<String, dynamic>> _groupLists = [];
 
   void selectedDestination(int index) {
     setState(() {
@@ -127,8 +126,8 @@ class _HomePageState extends State<HomePage> {
                           labelStyle: TextStyle(
                             color: isPrivate ? Colors.white : Colors.black,
                           ),
-                          onSelected: (v) =>
-                              setStateDialog(() => isPrivate = true),
+                          onSelected:
+                              (v) => setStateDialog(() => isPrivate = true),
                         ),
                         const SizedBox(width: 8),
                         ChoiceChip(
@@ -138,8 +137,8 @@ class _HomePageState extends State<HomePage> {
                           labelStyle: TextStyle(
                             color: !isPrivate ? Colors.white : Colors.black,
                           ),
-                          onSelected: (v) =>
-                              setStateDialog(() => isPrivate = false),
+                          onSelected:
+                              (v) => setStateDialog(() => isPrivate = false),
                         ),
                       ],
                     ),
@@ -173,24 +172,30 @@ class _HomePageState extends State<HomePage> {
                             final name = nameCtrl.text.trim();
                             if (name.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Please enter a list name')),
+                                const SnackBar(
+                                  content: Text('Please enter a list name'),
+                                ),
                               );
                               return;
                             }
 
-                            final user = Supabase.instance.client.auth.currentUser;
+                            final user =
+                                Supabase.instance.client.auth.currentUser;
                             if (user == null) return;
 
                             // Save to Supabase
-                            await Supabase.instance.client.from('grocery_lists').insert({
-                              'user_id': user.id,
-                              'name': name,
-                              'is_private': isPrivate,
-                            });
+                            await Supabase.instance.client
+                                .from('grocery_lists')
+                                .insert({
+                                  'user_id': user.id,
+                                  'name': name,
+                                  'is_private': isPrivate,
+                                });
 
                             // Update local list
                             setState(() {
                               _personalLists.add({
+                                'id': DateTime.now().toString(),
                                 'title': name,
                                 'private': isPrivate,
                                 'progress': 0.0,
@@ -278,7 +283,8 @@ class _HomePageState extends State<HomePage> {
                     FilledButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            const Color(0xFF139A5A)),
+                          const Color(0xFF139A5A),
+                        ),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -289,12 +295,15 @@ class _HomePageState extends State<HomePage> {
                         final code = codeCtrl.text.trim();
                         if (code.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please enter a code')),
+                            const SnackBar(
+                              content: Text('Please enter a code'),
+                            ),
                           );
                           return;
                         }
                         setState(() {
                           _groupLists.add({
+                            'id': code,
                             'title': 'Group List ($code)',
                             'joinedCode': code,
                             'progress': 0.0,
@@ -385,7 +394,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -448,27 +456,34 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 8),
                             Column(
-                              children: _personalLists
-                                  .map(
-                                    (l) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ListPage(),
+                              children:
+                                  _personalLists
+                                      .map(
+                                        (l) => Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 10.0,
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (_) => ListPage(
+                                                  listId: l['id'].toString(),
+                                                  listTitle: l['title'] as String,
+                                                ),
+                                              ),
+                                              );
+                                            },
+                                            child: _buildProgressCard(
+                                              l['title'] as String,
+                                              (l['progress'] as double),
+                                            ),
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    child: _buildProgressCard(
-                                      l['title'] as String,
-                                      (l['progress'] as double),
-                                    ),
-                                  ),
-                                ),
-                              )
-                                  .toList(),
+                                      )
+                                      .toList(),
                             ),
                           ],
                         ),
@@ -488,28 +503,34 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(height: 8),
                             Column(
-                              children: _groupLists
-                                  .map(
-                                    (g) => Padding(
-                                  padding:
-                                  const EdgeInsets.only(bottom: 10.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ListPage(),
+                              children:
+                                  _groupLists
+                                      .map(
+                                        (g) => Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 10.0,
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (_) => ListPage(
+                                                  listId: g['id'].toString(),
+                                                  listTitle: g['title'] as String,
+                                                ),
+                                              ),
+                                              );
+                                            },
+                                            child: _buildProgressCard(
+                                              g['title'] as String,
+                                              (g['progress'] as double),
+                                            ),
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    child: _buildProgressCard(
-                                      g['title'] as String,
-                                      (g['progress'] as double),
-                                    ),
-                                  ),
-                                ),
-                              )
-                                  .toList(),
+                                      )
+                                      .toList(),
                             ),
                           ],
                         ),
