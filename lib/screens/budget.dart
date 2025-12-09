@@ -1,22 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-void main() {
-  runApp(const BudgetApp());
-}
-
-class BudgetApp extends StatelessWidget {
-  const BudgetApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const BudgetScreen(),
-    );
-  }
-}
-
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
 
@@ -161,19 +145,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final currentMonthExpenses = monthlyExpenses[months[currentMonthIndex]] ?? [];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE1F7F1),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, size: 20),
-                  onPressed: () {},
-                ),
-              ],
-            ),
             const SizedBox(height: 10),
             const Text(
               "Monthly Budget",
