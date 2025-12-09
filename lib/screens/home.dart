@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocerease/screens/ListsOnlyPage.dart';
 import 'package:grocerease/screens/bottomnavbar.dart';
+import 'package:grocerease/screens/budget.dart';
 import 'package:grocerease/screens/homepage.dart';
 import 'package:grocerease/screens/list.dart';
 import 'package:grocerease/screens/notification.dart';
@@ -19,7 +20,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _pages = [
     HomePage(),
     ListsOnlyPage(),
-    const Placeholder(),
+    const BudgetScreen(),
     const ProfilePage(),
   ];
 
