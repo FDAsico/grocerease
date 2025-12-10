@@ -26,9 +26,9 @@ class BottomMenu extends StatelessWidget {
           label: 'List',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.storefront),
-          icon: Icon(Icons.storefront_outlined),
-          label: 'Favorites',
+          selectedIcon: Icon(Icons.money),
+          icon: Icon(Icons.money_outlined),
+          label: 'Budget',
         ),
         NavigationDestination(
           selectedIcon: Icon(Icons.person),
